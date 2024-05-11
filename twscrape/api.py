@@ -4,7 +4,8 @@ from httpx import Response
 
 from .accounts_pool import AccountsPool
 from .logger import set_log_level
-from .models import Tweet, User, parse_tweet, parse_tweets, parse_user, parse_users
+from .models import (Tweet, User, parse_tweet, parse_tweets, parse_user,
+                     parse_users)
 from .queue_client import QueueClient
 from .utils import encode_params, find_obj, get_by_path
 
@@ -250,7 +251,7 @@ class API:
 
     async def followers_raw(self, uid: int, limit=-1, kv=None):
         op = OP_Followers
-        kv = {"userId": str(uid), "count": 20, "includePromotedContent": False, **(kv or {})}
+        kv = {"userId": str(uid), "count": limit, "includePromotedContent": False, **(kv or {})}
         ft = {"responsive_web_twitter_article_notes_tab_enabled": False}
         async with aclosing(self._gql_items(op, kv, limit=limit, ft=ft)) as gen:
             async for x in gen:
@@ -266,7 +267,7 @@ class API:
 
     async def verified_followers_raw(self, uid: int, limit=-1, kv=None):
         op = OP_BlueVerifiedFollowers
-        kv = {"userId": str(uid), "count": 20, "includePromotedContent": False, **(kv or {})}
+        kv = {"userId": str(uid), "count": limit, "includePromotedContent": False, **(kv or {})}
         ft = {"responsive_web_twitter_article_notes_tab_enabled": True}
         async with aclosing(self._gql_items(op, kv, limit=limit, ft=ft)) as gen:
             async for x in gen:
@@ -282,7 +283,7 @@ class API:
 
     async def following_raw(self, uid: int, limit=-1, kv=None):
         op = OP_Following
-        kv = {"userId": str(uid), "count": 20, "includePromotedContent": False, **(kv or {})}
+        kv = {"userId": str(uid), "count": limit, "includePromotedContent": False, **(kv or {})}
         async with aclosing(self._gql_items(op, kv, limit=limit)) as gen:
             async for x in gen:
                 yield x
@@ -297,7 +298,7 @@ class API:
 
     async def subscriptions_raw(self, uid: int, limit=-1, kv=None):
         op = OP_UserCreatorSubscriptions
-        kv = {"userId": str(uid), "count": 20, "includePromotedContent": False, **(kv or {})}
+        kv = {"userId": str(uid), "count": limit, "includePromotedContent": False, **(kv or {})}
         async with aclosing(self._gql_items(op, kv, limit=limit)) as gen:
             async for x in gen:
                 yield x
@@ -312,7 +313,7 @@ class API:
 
     async def retweeters_raw(self, twid: int, limit=-1, kv=None):
         op = OP_Retweeters
-        kv = {"tweetId": str(twid), "count": 20, "includePromotedContent": True, **(kv or {})}
+        kv = {"tweetId": str(twid), "count": limit, "includePromotedContent": True, **(kv or {})}
         async with aclosing(self._gql_items(op, kv, limit=limit)) as gen:
             async for x in gen:
                 yield x
@@ -327,7 +328,7 @@ class API:
 
     async def favoriters_raw(self, twid: int, limit=-1, kv=None):
         op = OP_Favoriters
-        kv = {"tweetId": str(twid), "count": 20, "includePromotedContent": True, **(kv or {})}
+        kv = {"tweetId": str(twid), "count": limit, "includePromotedContent": True, **(kv or {})}
         async with aclosing(self._gql_items(op, kv, limit=limit)) as gen:
             async for x in gen:
                 yield x
@@ -421,7 +422,7 @@ class API:
 
     async def list_timeline_raw(self, list_id: int, limit=-1, kv=None):
         op = OP_ListLatestTweetsTimeline
-        kv = {"listId": str(list_id), "count": 20, **(kv or {})}
+        kv = {"listId": str(list_id), "count": limit, **(kv or {})}
         async with aclosing(self._gql_items(op, kv, limit=limit)) as gen:
             async for x in gen:
                 yield x
