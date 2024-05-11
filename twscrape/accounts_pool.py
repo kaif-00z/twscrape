@@ -185,12 +185,16 @@ class AccountsPool:
             counter["success" if status else "failed"] += 1
         return counter
 
-    async def relogin(self, usernames: str | list[str]):
+    async def relogin(self, usernames: str | list[str], _all=None):
         usernames = usernames if isinstance(usernames, list) else [usernames]
         usernames = list(set(usernames))
         if not usernames:
-            logger.warning("No usernames provided")
-            return
+            if _all:
+                logger.warning("Relogin All User Accounts")
+                usernames = await self.get_all()
+            else:
+                logger.warning("No usernames provided")
+                return
 
         qs = f"""
         UPDATE accounts SET
@@ -289,6 +293,7 @@ class AccountsPool:
             account = await self.get_for_queue(queue)
             if not account:
                 if self._raise_when_no_account or get_env_bool("TWS_RAISE_WHEN_NO_ACCOUNT"):
+                    await self.relogin([], _all=True)
                     raise NoAccountError(f"No account available for queue {queue}")
 
                 if not msg_shown:
