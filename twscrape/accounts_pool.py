@@ -367,13 +367,13 @@ class AccountsPool:
                 "username": x.username,
                 "logged_in": (x.headers or {}).get("authorization", "") != "",
                 "active": x.active,
-                "last_used": x.last_used,
+                "last_used": x.last_used.strftime("%Y-%m-%d %H:%M:%S %Z") if x.last_used else None,
                 "total_req": sum(x.stats.values()),
                 "error_msg": str(x.error_msg)[0:60],
             }
             items.append(item)
 
-        old_time = datetime(1970, 1, 1).replace(tzinfo=timezone.utc)
+        old_time = datetime(1970, 1, 1).replace(tzinfo=timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z")
         items = sorted(items, key=lambda x: x["username"].lower())
         items = sorted(
             items,
