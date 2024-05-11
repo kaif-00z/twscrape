@@ -143,7 +143,7 @@ class API:
         op = OP_SearchTimeline
         kv = {
             "rawQuery": q,
-            "count": 20,
+            "count": limit,
             "product": "Latest",
             "querySource": "typed_query",
             **(kv or {}),
@@ -345,7 +345,7 @@ class API:
         op = OP_UserTweets
         kv = {
             "userId": str(uid),
-            "count": 40,
+            "count": limit,
             "includePromotedContent": True,
             "withQuickPromoteEligibilityTweetFields": True,
             "withVoice": True,
@@ -368,7 +368,7 @@ class API:
         op = OP_UserTweetsAndReplies
         kv = {
             "userId": str(uid),
-            "count": 40,
+            "count": limit,
             "includePromotedContent": True,
             "withCommunity": True,
             "withVoice": True,
@@ -391,7 +391,7 @@ class API:
         op = OP_UserMedia
         kv = {
             "userId": str(uid),
-            "count": 40,
+            "count": limit,
             "includePromotedContent": False,
             "withClientEventToken": False,
             "withBirdwatchNotes": False,
@@ -439,7 +439,7 @@ class API:
         op = OP_Likes
         kv = {
             "userId": str(uid),
-            "count": 40,
+            "count": limit,
             "includePromotedContent": True,
             "withVoice": True,
             "withV2Timeline": True,
